@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, Clock, Zap } from 'lucide-react';
 import ComboSystem from './ComboSystem';
+import { playCorrectSound, playWrongSound, playClearSound, playPopSound } from '../utils/audio';
 
 const TOTAL_QUESTIONS = 10;
 const TIME_LIMIT = 30; // 30 seconds for 10 questions
@@ -27,6 +28,7 @@ export default function SpeedRunMode({ onBack }) {
             setTimeLeft(prev => {
                 if (prev <= 1) {
                     setGameState('lost');
+                    playWrongSound(); // Final buzz on loss
                     return 0;
                 }
                 return prev - 1;
@@ -38,15 +40,19 @@ export default function SpeedRunMode({ onBack }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (gameState !== 'playing') return;
+        if (gameState !== 'playing' || !inputVal) return;
+
+        playPopSound();
 
         if (parseInt(inputVal, 10) === currentQuestion.answer) {
             // Correct!
+            playCorrectSound();
             const nextCount = questionCount + 1;
             setCombo(prev => prev + 1);
             setInputVal('');
 
             if (nextCount >= TOTAL_QUESTIONS) {
+                playClearSound();
                 setGameState('won');
             } else {
                 setQuestionCount(nextCount);
@@ -54,6 +60,7 @@ export default function SpeedRunMode({ onBack }) {
             }
         } else {
             // Wrong! Reset combo, maybe shake effect
+            playWrongSound();
             setCombo(0);
             setInputVal('');
         }
@@ -111,9 +118,10 @@ export default function SpeedRunMode({ onBack }) {
                         value={inputVal}
                         onChange={(e) => setInputVal(e.target.value)}
                         className="font-number"
+                        placeholder="정답"
                     />
                     <button type="submit" style={styles.submitBtn}>
-                        <Zap size={24} color="#fff" />
+                        <span style={styles.submitText}>OK</span>
                     </button>
                 </form>
             </div>
@@ -240,12 +248,19 @@ const styles = {
         backgroundColor: '#fff'
     },
     submitBtn: {
-        padding: '1rem 1.5rem',
+        padding: '1rem 2rem',
         backgroundColor: 'var(--color-secondary)',
         borderRadius: 'var(--radius-md)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        boxShadow: '0 4px 10px rgba(79, 172, 254, 0.3)'
+        boxShadow: '0 4px 10px rgba(79, 172, 254, 0.3)',
+        color: '#fff',
+        border: '4px solid var(--color-secondary)'
+    },
+    submitText: {
+        fontSize: '1.5rem',
+        fontWeight: '800',
+        fontFamily: 'var(--font-main)'
     }
 };

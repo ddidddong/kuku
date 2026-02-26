@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, Star } from 'lucide-react';
 import StickerBurst from './StickerBurst';
+import { playCorrectSound, playWrongSound, playClearSound, playPopSound } from '../utils/audio';
 
 // Helpers for game logic
 const generateQuestion = () => {
@@ -29,7 +30,7 @@ const MAX_PROGRESS = 5;
 
 export default function MissingNumberMode({ onBack }) {
     const [question, setQuestion] = useState(null);
-    const [draggedItem, setDraggedItem] = useState(null);
+    const [selectedItem, setSelectedItem] = useState(null);
     const [isCorrect, setIsCorrect] = useState(null);
     const [progress, setProgress] = useState(0);
     const [showBurst, setShowBurst] = useState(false);
@@ -38,22 +39,24 @@ export default function MissingNumberMode({ onBack }) {
         setQuestion(generateQuestion());
     }, []);
 
-    const handleDragStart = (e, number) => {
-        setDraggedItem(number);
-        e.dataTransfer.setData('text/plain', number);
-    };
+    const handleChoiceClick = (number) => {
+        if (isCorrect !== null) return; // Wait for current animation to finish
 
-    const handleDrop = (e) => {
-        e.preventDefault();
-        if (draggedItem === question.answer) {
+        playPopSound();
+        setSelectedItem(number);
+
+        if (number === question.answer) {
             setIsCorrect(true);
+            playCorrectSound();
             const newProgress = progress + 1;
 
             setTimeout(() => {
                 setIsCorrect(null);
+                setSelectedItem(null);
                 setProgress(newProgress);
 
                 if (newProgress >= MAX_PROGRESS) {
+                    playClearSound();
                     setShowBurst(true);
                 } else {
                     setQuestion(generateQuestion());
@@ -61,13 +64,12 @@ export default function MissingNumberMode({ onBack }) {
             }, 1000);
         } else {
             setIsCorrect(false);
-            setTimeout(() => setIsCorrect(null), 1000);
+            playWrongSound();
+            setTimeout(() => {
+                setIsCorrect(null);
+                setSelectedItem(null);
+            }, 1000);
         }
-        setDraggedItem(null);
-    };
-
-    const handleDragOver = (e) => {
-        e.preventDefault();
     };
 
     if (!question) return null;
@@ -115,11 +117,9 @@ export default function MissingNumberMode({ onBack }) {
                         borderColor: isCorrect === true ? 'var(--color-success)' : (isCorrect === false ? 'var(--color-primary)' : 'var(--bg-secondary)'),
                         backgroundColor: isCorrect === true ? 'var(--bg-tertiary)' : 'var(--bg-primary)'
                     }}
-                    onDrop={handleDrop}
-                    onDragOver={handleDragOver}
                     className={isCorrect === false ? 'animate-shake' : ''}
                 >
-                    {isCorrect === true && <span style={styles.number} className="font-number">{question.answer}</span>}
+                    {(isCorrect !== null && selectedItem !== null) && <span style={styles.number} className="font-number">{selectedItem}</span>}
                 </div>
                 <span style={styles.operator}>=</span>
                 <span style={styles.number} className="font-number">{question.result}</span>
@@ -128,15 +128,15 @@ export default function MissingNumberMode({ onBack }) {
             {/* Choices Area */}
             <div style={styles.choicesArea}>
                 {question.choices.map((num, i) => (
-                    <div
+                    <button
                         key={i}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, num)}
+                        onClick={() => handleChoiceClick(num)}
                         style={styles.choiceCard}
                         className="font-number animate-pop"
+                        disabled={isCorrect !== null}
                     >
                         {num}
-                    </div>
+                    </button>
                 ))}
             </div>
         </div>

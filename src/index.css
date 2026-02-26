@@ -2,33 +2,42 @@
 
 :root {
   /* Pastel Palette */
-  --bg-primary: #fff5f8;       /* Very soft pink/white for background */
-  --bg-secondary: #e6f7ff;     /* Soft baby blue */
-  --bg-tertiary: #f0fdf4;      /* Soft mint green */
-  --bg-warning: #fffbeb;       /* Soft yellow */
+  --bg-primary: #fff5f8;
+  /* Very soft pink/white for background */
+  --bg-secondary: #e6f7ff;
+  /* Soft baby blue */
+  --bg-tertiary: #f0fdf4;
+  /* Soft mint green */
+  --bg-warning: #fffbeb;
+  /* Soft yellow */
 
-  --color-primary: #ff8fa3;    /* Fun pink */
-  --color-secondary: #4facfe;  /* Cheerful blue */
-  --color-success: #38bdf8;    /* Bright sky blue */
-  --color-accent: #fcd34d;     /* Warm yellow */
-  
-  --text-main: #4a4a4a;        /* Soft dark grey for readability */
+  --color-primary: #ff8fa3;
+  /* Fun pink */
+  --color-secondary: #4facfe;
+  /* Cheerful blue */
+  --color-success: #38bdf8;
+  /* Bright sky blue */
+  --color-accent: #fcd34d;
+  /* Warm yellow */
+
+  --text-main: #4a4a4a;
+  /* Soft dark grey for readability */
   --text-muted: #8a8a8a;
   --text-light: #ffffff;
 
   --font-main: 'Nunito', sans-serif;
   --font-number: 'Jua', sans-serif;
-  
+
   --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 8px 15px rgba(255, 143, 163, 0.2);
   --shadow-lg: 0 15px 25px rgba(0, 0, 0, 0.1);
-  --shadow-inner: inset 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
 
   --radius-sm: 12px;
   --radius-md: 20px;
   --radius-lg: 32px;
   --radius-full: 9999px;
-  
+
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -37,7 +46,8 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  user-select: none; /* Prevent text selection for app-like feel */
+  user-select: none;
+  /* Prevent text selection for app-like feel */
   -webkit-user-select: none;
 }
 
@@ -55,7 +65,8 @@ body {
   background-size: 40px 40px;
   background-position: 0 0;
   background-color: #fff9fa;
-  overflow: hidden; /* App like feel, prevent scrolling unless intended */
+  overflow: hidden;
+  /* App like feel, prevent scrolling unless intended */
 }
 
 /* Number font utility */
@@ -81,7 +92,8 @@ button:active {
 /* Reusable structural classes */
 .app-container {
   width: 100%;
-  max-width: 480px; /* Mobile size */
+  max-width: 480px;
+  /* Mobile size */
   height: 100vh;
   max-height: 850px;
   background: white;
@@ -101,22 +113,54 @@ button:active {
 
 /* Micro-animations */
 @keyframes pop-in {
-  0% { transform: scale(0); opacity: 0; }
-  80% { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  80% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px) rotate(-5deg); }
-  50% { transform: translateX(5px) rotate(5deg); }
-  75% { transform: translateX(-5px) rotate(-5deg); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px) rotate(-5deg);
+  }
+
+  50% {
+    transform: translateX(5px) rotate(5deg);
+  }
+
+  75% {
+    transform: translateX(-5px) rotate(-5deg);
+  }
 }
 
 .animate-pop {
@@ -129,4 +173,18 @@ button:active {
 
 .animate-shake {
   animation: shake 0.4s ease-in-out;
+}
+
+.copyright-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
 }

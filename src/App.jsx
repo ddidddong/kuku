@@ -23,9 +23,14 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      {renderView()}
-    </div>
+    <>
+      <div className="app-container">
+        {renderView()}
+      </div>
+      <div className="copyright-footer">
+        &copy; 2026 YES Gugudan. All rights reserved.
+      </div>
+    </>
   );
 }
 
