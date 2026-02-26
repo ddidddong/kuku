@@ -4,9 +4,13 @@ import StickerBurst from './StickerBurst';
 import { playCorrectSound, playWrongSound, playClearSound, playPopSound } from '../utils/audio';
 
 // Helpers for game logic
-const generateQuestion = () => {
-    const a = Math.floor(Math.random() * 8) + 2; // 2 to 9
-    const b = Math.floor(Math.random() * 9) + 1; // 1 to 9
+const generateQuestion = (prev = null) => {
+    let a, b;
+    do {
+        a = Math.floor(Math.random() * 8) + 2; // 2 to 9
+        b = Math.floor(Math.random() * 9) + 1; // 1 to 9
+    } while (prev && a === prev.a && b === prev.answer);
+
     const result = a * b;
     const answer = b; // We are hiding 'b'
 
@@ -59,7 +63,7 @@ export default function MissingNumberMode({ onBack }) {
                     playClearSound();
                     setShowBurst(true);
                 } else {
-                    setQuestion(generateQuestion());
+                    setQuestion(prev => generateQuestion(prev));
                 }
             }, 1000);
         } else {
@@ -79,15 +83,16 @@ export default function MissingNumberMode({ onBack }) {
             {showBurst && <StickerBurst onComplete={() => {
                 setShowBurst(false);
                 setProgress(0);
-                setQuestion(generateQuestion());
+                setQuestion(prev => generateQuestion(prev));
             }} />}
             {/* Header */}
             <div style={styles.header}>
                 <button onClick={onBack} style={styles.backButton}>
-                    <ChevronLeft size={24} color="var(--color-primary)" />
+                    <ChevronLeft size={20} />
+                    <span style={{ marginLeft: '4px' }}>그만풀기</span>
                 </button>
                 <span style={styles.title}>빈칸 채우기</span>
-                <div style={{ width: 24 }} />
+                <div style={{ width: 90 }} />
             </div>
 
             {/* Village Visual Area (Reward) */}
@@ -162,9 +167,14 @@ const styles = {
         padding: '1.5rem',
     },
     backButton: {
-        padding: '0.5rem',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0.5rem 1rem',
         backgroundColor: 'var(--bg-primary)',
         borderRadius: 'var(--radius-full)',
+        color: 'var(--color-primary)',
+        fontWeight: 'bold',
+        fontSize: '1rem'
     },
     title: {
         fontSize: '1.2rem',

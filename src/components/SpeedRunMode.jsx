@@ -3,12 +3,14 @@ import { ChevronLeft, Clock, Zap } from 'lucide-react';
 import ComboSystem from './ComboSystem';
 import { playCorrectSound, playWrongSound, playClearSound, playPopSound } from '../utils/audio';
 
-const TOTAL_QUESTIONS = 10;
-const TIME_LIMIT = 30; // 30 seconds for 10 questions
+const TIME_LIMIT = 30; // 30 seconds
 
-const generateQuestion = () => {
-    const a = Math.floor(Math.random() * 8) + 2;
-    const b = Math.floor(Math.random() * 9) + 1;
+const generateQuestion = (prev = null) => {
+    let a, b;
+    do {
+        a = Math.floor(Math.random() * 8) + 2;
+        b = Math.floor(Math.random() * 9) + 1;
+    } while (prev && a === prev.a && b === prev.b);
     return { a, b, answer: a * b };
 };
 
@@ -48,16 +50,10 @@ export default function SpeedRunMode({ onBack }) {
             // Correct!
             playCorrectSound();
             const nextCount = questionCount + 1;
+            setQuestionCount(nextCount);
             setCombo(prev => prev + 1);
             setInputVal('');
-
-            if (nextCount >= TOTAL_QUESTIONS) {
-                playClearSound();
-                setGameState('won');
-            } else {
-                setQuestionCount(nextCount);
-                setCurrentQuestion(generateQuestion());
-            }
+            setCurrentQuestion(prev => generateQuestion(prev));
         } else {
             // Wrong! Reset combo, maybe shake effect
             playWrongSound();
@@ -67,24 +63,22 @@ export default function SpeedRunMode({ onBack }) {
     };
 
     const renderContent = () => {
-        if (gameState === 'won') {
-            return (
-                <div style={styles.centerContent} className="animate-pop">
-                    <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>🏆</div>
-                    <h2 style={{ color: 'var(--color-success)', fontSize: '2rem' }}>성공!</h2>
-                    <p>시간 안에 모두 맞혔어요!</p>
-                    <button style={styles.primaryBtn} onClick={onBack}>돌아가기</button>
-                </div>
-            );
-        }
-
         if (gameState === 'lost') {
             return (
                 <div style={styles.centerContent} className="animate-pop">
                     <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>⏰</div>
-                    <h2 style={{ color: 'var(--color-primary)', fontSize: '2rem' }}>시간 초과!</h2>
-                    <p>아쉽지만 다음에 다시 도전해요!</p>
-                    <button style={styles.primaryBtn} onClick={onBack}>돌아가기</button>
+                    <h2 style={{ color: 'var(--color-primary)', fontSize: '2rem' }}>시간 종료!</h2>
+                    <p style={{ fontSize: '1.2rem', margin: '1rem 0' }}>총 <span style={{ color: 'var(--color-secondary)', fontWeight: 'bold' }}>{questionCount}</span>문제 맞혔어요!</p>
+                    <div style={{ display: 'flex', gap: '1rem' }}>
+                        <button style={styles.secondaryBtn} onClick={onBack}>그만풀기</button>
+                        <button style={styles.primaryBtn} onClick={() => {
+                            setGameState('playing');
+                            setTimeLeft(TIME_LIMIT);
+                            setQuestionCount(0);
+                            setCombo(0);
+                            setCurrentQuestion(generateQuestion());
+                        }}>다시하기</button>
+                    </div>
                 </div>
             );
         }
@@ -97,7 +91,7 @@ export default function SpeedRunMode({ onBack }) {
                         <span style={{ color: 'var(--color-secondary)', fontWeight: 'bold' }}>{timeLeft}초</span>
                     </div>
                     <div style={styles.statBox}>
-                        <span style={{ fontWeight: 'bold', color: 'var(--text-muted)' }}>{questionCount} / {TOTAL_QUESTIONS}</span>
+                        <span style={{ fontWeight: 'bold', color: 'var(--color-success)' }}>{questionCount}개 정답</span>
                     </div>
                 </div>
 
@@ -132,10 +126,11 @@ export default function SpeedRunMode({ onBack }) {
         <div style={styles.container}>
             <div style={styles.header}>
                 <button onClick={onBack} style={styles.backButton}>
-                    <ChevronLeft size={24} color="var(--color-primary)" />
+                    <ChevronLeft size={20} />
+                    <span style={{ marginLeft: '4px' }}>그만풀기</span>
                 </button>
                 <span style={styles.title}>스피드 런</span>
-                <div style={{ width: 24 }} />
+                <div style={{ width: 90 }} />
             </div>
             <div style={styles.content}>
                 {renderContent()}
@@ -159,9 +154,16 @@ const styles = {
         padding: '1.5rem',
     },
     backButton: {
-        padding: '0.5rem',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0.5rem 1rem',
         backgroundColor: 'var(--bg-primary)',
         borderRadius: 'var(--radius-full)',
+        border: 'none',
+        color: 'var(--color-primary)',
+        fontWeight: 'bold',
+        fontSize: '1rem',
+        cursor: 'pointer'
     },
     title: {
         fontSize: '1.2rem',
@@ -182,13 +184,21 @@ const styles = {
         gap: '1rem',
     },
     primaryBtn: {
-        marginTop: '2rem',
-        padding: '1rem 2rem',
+        padding: '1rem 1.5rem',
         backgroundColor: 'var(--color-secondary)',
         color: '#fff',
         borderRadius: 'var(--radius-md)',
         fontSize: '1.2rem',
-        boxShadow: 'var(--shadow-sm)'
+        boxShadow: 'var(--shadow-sm)',
+        fontWeight: 'bold'
+    },
+    secondaryBtn: {
+        padding: '1rem 1.5rem',
+        backgroundColor: 'var(--bg-secondary)',
+        color: 'var(--text-main)',
+        borderRadius: 'var(--radius-md)',
+        fontSize: '1.2rem',
+        fontWeight: 'bold'
     },
     playArea: {
         flex: 1,
