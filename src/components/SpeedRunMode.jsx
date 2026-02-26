@@ -40,8 +40,20 @@ export default function SpeedRunMode({ onBack }) {
         return () => clearInterval(timer);
     }, [gameState]);
 
+    const handleNumPress = (numStr) => {
+        if (gameState !== 'playing') return;
+        playPopSound();
+        setInputVal(prev => prev.length < 3 ? prev + numStr : prev);
+    };
+
+    const handleDelPress = () => {
+        if (gameState !== 'playing') return;
+        playPopSound();
+        setInputVal(prev => prev.slice(0, -1));
+    };
+
     const handleSubmit = (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         if (gameState !== 'playing' || !inputVal) return;
 
         playPopSound();
@@ -104,20 +116,20 @@ export default function SpeedRunMode({ onBack }) {
                     <span style={styles.operator}>=</span>
                 </div>
 
-                <form onSubmit={handleSubmit} style={styles.inputForm}>
-                    <input
-                        type="number"
-                        autoFocus
-                        style={styles.input}
-                        value={inputVal}
-                        onChange={(e) => setInputVal(e.target.value)}
-                        className="font-number"
-                        placeholder="정답"
-                    />
-                    <button type="submit" style={styles.submitBtn}>
-                        <span style={styles.submitText}>OK</span>
-                    </button>
-                </form>
+                <div style={styles.inputDisplay} className="font-number text-shadow">
+                    {inputVal || <span style={{ color: 'var(--bg-secondary)' }}>?</span>}
+                </div>
+
+                <div style={styles.numpad}>
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                        <button key={num} onClick={() => handleNumPress(num.toString())} style={styles.numBtn} className="font-number animate-pop">
+                            {num}
+                        </button>
+                    ))}
+                    <button onClick={handleDelPress} style={styles.delBtn}>지우기</button>
+                    <button onClick={() => handleNumPress('0')} style={styles.numBtn} className="font-number animate-pop">0</button>
+                    <button onClick={handleSubmit} style={styles.numpadSubmitBtn}>OK</button>
+                </div>
             </div>
         );
     };
@@ -240,37 +252,52 @@ const styles = {
         fontSize: '3rem',
         color: 'var(--text-muted)'
     },
-    inputForm: {
-        display: 'flex',
-        gap: '1rem',
-        marginTop: 'auto',
-        marginBottom: '2rem'
-    },
-    input: {
-        flex: 1,
-        padding: '1rem',
-        fontSize: '2.5rem',
-        textAlign: 'center',
-        borderRadius: 'var(--radius-md)',
-        border: '4px solid var(--color-secondary)',
-        outline: 'none',
-        color: 'var(--text-main)',
-        backgroundColor: '#fff'
-    },
-    submitBtn: {
-        padding: '1rem 2rem',
-        backgroundColor: 'var(--color-secondary)',
-        borderRadius: 'var(--radius-md)',
+    inputDisplay: {
+        width: '100%',
+        maxWidth: '300px',
+        margin: '0 auto 1rem auto',
+        height: '80px',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        boxShadow: '0 4px 10px rgba(79, 172, 254, 0.3)',
-        color: '#fff',
-        border: '4px solid var(--color-secondary)'
+        fontSize: '3.5rem',
+        borderRadius: 'var(--radius-md)',
+        border: '4px solid var(--color-secondary)',
+        color: 'var(--color-secondary)',
+        backgroundColor: '#fff',
     },
-    submitText: {
+    numpad: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: '0.8rem',
+        width: '100%',
+        maxWidth: '300px',
+        margin: '0 auto auto auto'
+    },
+    numBtn: {
+        backgroundColor: '#fff',
+        border: '2px solid var(--bg-tertiary)',
+        borderRadius: 'var(--radius-md)',
+        padding: '0.8rem',
+        fontSize: '2rem',
+        color: 'var(--text-main)',
+        boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+    },
+    delBtn: {
+        backgroundColor: 'var(--bg-secondary)',
+        borderRadius: 'var(--radius-md)',
+        fontSize: '1.2rem',
+        fontWeight: 'bold',
+        color: 'var(--color-secondary)',
+        border: 'none',
+    },
+    numpadSubmitBtn: {
+        backgroundColor: 'var(--color-secondary)',
+        borderRadius: 'var(--radius-md)',
         fontSize: '1.5rem',
         fontWeight: '800',
-        fontFamily: 'var(--font-main)'
+        color: '#fff',
+        border: 'none',
+        boxShadow: 'var(--shadow-sm)',
     }
 };
