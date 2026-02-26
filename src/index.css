@@ -188,3 +188,8 @@ button:active {
   backdrop-filter: blur(5px);
   z-index: 1000;
 }
+
+/* Hide scrollbar for horizontal scrolling elements */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

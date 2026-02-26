@@ -4,10 +4,10 @@ import StickerBurst from './StickerBurst';
 import { playCorrectSound, playWrongSound, playClearSound, playPopSound } from '../utils/audio';
 
 // Helpers for game logic
-const generateQuestion = (prev = null) => {
+const generateQuestion = (prev = null, selectedTable = null) => {
     let a, b;
     do {
-        a = Math.floor(Math.random() * 8) + 2; // 2 to 9
+        a = selectedTable ? selectedTable : Math.floor(Math.random() * 8) + 2; // 2 to 9
         b = Math.floor(Math.random() * 9) + 1; // 1 to 9
     } while (prev && a === prev.a && b === prev.answer);
 
@@ -33,6 +33,7 @@ const VILLAGE_ITEMS = ['🌳', '🌷', '🏠', ' fences?', '🐶', '🚗'];
 const MAX_PROGRESS = 5;
 
 export default function MissingNumberMode({ onBack }) {
+    const [selectedTable, setSelectedTable] = useState(null);
     const [question, setQuestion] = useState(null);
     const [selectedItem, setSelectedItem] = useState(null);
     const [isCorrect, setIsCorrect] = useState(null);
@@ -40,8 +41,11 @@ export default function MissingNumberMode({ onBack }) {
     const [showBurst, setShowBurst] = useState(false);
 
     useEffect(() => {
-        setQuestion(generateQuestion());
-    }, []);
+        setQuestion(generateQuestion(null, selectedTable));
+        setProgress(0);
+        setIsCorrect(null);
+        setSelectedItem(null);
+    }, [selectedTable]);
 
     const handleChoiceClick = (number) => {
         if (isCorrect !== null) return; // Wait for current animation to finish
@@ -63,7 +67,7 @@ export default function MissingNumberMode({ onBack }) {
                     playClearSound();
                     setShowBurst(true);
                 } else {
-                    setQuestion(prev => generateQuestion(prev));
+                    setQuestion(prev => generateQuestion(prev, selectedTable));
                 }
             }, 1000);
         } else {
@@ -83,7 +87,7 @@ export default function MissingNumberMode({ onBack }) {
             {showBurst && <StickerBurst onComplete={() => {
                 setShowBurst(false);
                 setProgress(0);
-                setQuestion(prev => generateQuestion(prev));
+                setQuestion(prev => generateQuestion(prev, selectedTable));
             }} />}
             {/* Header */}
             <div style={styles.header}>
@@ -93,6 +97,27 @@ export default function MissingNumberMode({ onBack }) {
                 </button>
                 <span style={styles.title}>빈칸 채우기</span>
                 <div style={{ width: 90 }} />
+            </div>
+
+            {/* Table Selection Toggle */}
+            <div style={styles.tableSelectorContainer}>
+                <div style={{ ...styles.tableSelector, WebkitOverflowScrolling: 'touch' }} className="hide-scrollbar">
+                    <button
+                        style={{ ...styles.tablePill, ...(selectedTable === null ? styles.tablePillActive : {}) }}
+                        onClick={() => setSelectedTable(null)}
+                    >
+                        전체
+                    </button>
+                    {[2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                        <button
+                            key={num}
+                            style={{ ...styles.tablePill, ...(selectedTable === num ? styles.tablePillActive : {}) }}
+                            onClick={() => setSelectedTable(num)}
+                        >
+                            {num}단
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* Village Visual Area (Reward) */}
@@ -180,6 +205,32 @@ const styles = {
         fontSize: '1.2rem',
         fontWeight: '700',
         color: 'var(--text-main)',
+    },
+    tableSelectorContainer: {
+        padding: '0 1rem',
+        marginBottom: '0.5rem',
+    },
+    tableSelector: {
+        display: 'flex',
+        gap: '0.5rem',
+        overflowX: 'auto',
+        paddingBottom: '0.5rem',
+        msOverflowStyle: 'none',
+        scrollbarWidth: 'none',
+    },
+    tablePill: {
+        padding: '0.4rem 1rem',
+        borderRadius: 'var(--radius-full)',
+        backgroundColor: 'var(--bg-secondary)',
+        color: 'var(--color-secondary)',
+        fontWeight: 'bold',
+        fontSize: '1rem',
+        whiteSpace: 'nowrap',
+    },
+    tablePillActive: {
+        backgroundColor: 'var(--color-secondary)',
+        color: '#fff',
+        boxShadow: 'var(--shadow-sm)',
     },
     villageArea: {
         flex: 1,
