@@ -76,7 +76,11 @@ export default function MissingNumberMode({ onBack }) {
 
     return (
         <div style={styles.container}>
-            {showBurst && <StickerBurst onComplete={() => { setShowBurst(false); onBack(); }} />}
+            {showBurst && <StickerBurst onComplete={() => {
+                setShowBurst(false);
+                setProgress(0);
+                setQuestion(generateQuestion());
+            }} />}
             {/* Header */}
             <div style={styles.header}>
                 <button onClick={onBack} style={styles.backButton}>
