@@ -5,7 +5,7 @@ export default function Home({ onSelectMode }) {
         <div style={styles.container} className="animate-pop-subtle">
             <div style={styles.header}>
                 <div style={styles.villageIcon} className="animate-bounce-subtle">🕊️</div>
-                <h1 style={styles.title}>구구단 빌리지</h1>
+                <h1 style={styles.title}>구구수학</h1>
                 <p style={styles.subtitle}>수학과 친해지는 조용한 시간</p>
             </div>
 

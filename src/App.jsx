@@ -42,7 +42,7 @@ function App() {
       case 'bingo': return '빙고 챌린지';
       case 'canvas': return '나의 캔버스';
       case 'home':
-      default: return '구구단 빌리지';
+      default: return '구구수학';
     }
   };
 
