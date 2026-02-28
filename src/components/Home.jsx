@@ -1,46 +1,60 @@
 import React from 'react';
-import { Play, Zap, Grid } from 'lucide-react';
 
 export default function Home({ onSelectMode }) {
     return (
-        <div style={styles.container} className="animate-pop">
+        <div style={styles.container} className="animate-pop-subtle">
             <div style={styles.header}>
-                <div style={styles.villageIcon} className="animate-float">🏡</div>
-                <h1 style={styles.title} className="font-number">구구단 빌리지</h1>
-                <p style={styles.subtitle}>재미있게 구구단을 배워보아요!</p>
+                <div style={styles.villageIcon} className="animate-bounce-subtle">🕊️</div>
+                <h1 style={styles.title}>구구단 빌리지</h1>
+                <p style={styles.subtitle}>수학과 친해지는 조용한 시간</p>
             </div>
 
             <div style={styles.menuContainer}>
                 <button
-                    style={{ ...styles.menuButton, backgroundColor: 'var(--color-primary)' }}
-                    onClick={() => onSelectMode('missing_number')}
+                    className="btn-neumorph"
+                    style={styles.menuButton}
+                    onClick={() => onSelectMode('addition')}
                 >
-                    <div style={styles.iconWrapper}><Play size={32} color="var(--color-primary)" /></div>
+                    <div style={{ ...styles.iconWrapper, color: 'var(--color-point-orange)' }}>＋</div>
                     <div style={styles.buttonText}>
-                        <span style={styles.buttonTitle}>빈칸 채우기</span>
-                        <span style={styles.buttonDesc}>마을을 예쁘게 꾸며요!</span>
+                        <span style={styles.buttonTitle}>덧셈 팡팡</span>
+                        <span style={styles.buttonDesc}>기초 수 개념 익히기</span>
                     </div>
                 </button>
 
                 <button
-                    style={{ ...styles.menuButton, backgroundColor: 'var(--color-secondary)' }}
-                    onClick={() => onSelectMode('speed_run')}
+                    className="btn-neumorph"
+                    style={styles.menuButton}
+                    onClick={() => onSelectMode('multiplication')}
                 >
-                    <div style={styles.iconWrapper}><Zap size={32} color="var(--color-secondary)" /></div>
+                    <div style={{ ...styles.iconWrapper, color: 'var(--color-point-blue)' }}>×</div>
                     <div style={styles.buttonText}>
-                        <span style={styles.buttonTitle}>스피드 런</span>
-                        <span style={styles.buttonDesc}>빠르게 맞혀봐요!</span>
+                        <span style={styles.buttonTitle}>구구단 톡톡</span>
+                        <span style={styles.buttonDesc}>리듬감 있는 곱셈 학습</span>
                     </div>
                 </button>
 
                 <button
-                    style={{ ...styles.menuButton, backgroundColor: 'var(--color-accent)' }}
-                    onClick={() => onSelectMode('collection')}
+                    className="btn-neumorph"
+                    style={styles.menuButton}
+                    onClick={() => onSelectMode('bingo')}
                 >
-                    <div style={styles.iconWrapper}><Grid size={32} color="var(--color-accent)" /></div>
+                    <div style={{ ...styles.iconWrapper, color: 'var(--color-semantic-mint)' }}>⊞</div>
                     <div style={styles.buttonText}>
-                        <span style={styles.buttonTitle}>캐릭터 도감</span>
-                        <span style={styles.buttonDesc}>내가 모은 친구들</span>
+                        <span style={styles.buttonTitle}>빙고 챌린지</span>
+                        <span style={styles.buttonDesc}>혼합 연산 퍼즐 풀기</span>
+                    </div>
+                </button>
+
+                <button
+                    className="btn-neumorph"
+                    style={styles.menuButton}
+                    onClick={() => onSelectMode('canvas')}
+                >
+                    <div style={{ ...styles.iconWrapper, color: 'var(--text-muted)' }}>✎</div>
+                    <div style={styles.buttonText}>
+                        <span style={styles.buttonTitle}>나의 캔버스</span>
+                        <span style={styles.buttonDesc}>학습 기록 그리기</span>
                     </div>
                 </button>
             </div>
@@ -55,64 +69,73 @@ const styles = {
         flexDirection: 'column',
         justifyContent: 'center',
         padding: '2rem',
-        background: 'linear-gradient(180deg, var(--bg-primary) 0%, #fff 100%)',
-        height: '100%'
+        background: 'transparent',
+        height: '100%',
+        maxWidth: '480px',
+        margin: '0 auto',
+        width: '100%'
     },
     header: {
         textAlign: 'center',
-        marginBottom: '3rem'
+        marginBottom: '2.5rem'
     },
     villageIcon: {
-        fontSize: '5rem',
-        marginBottom: '1rem',
-        display: 'inline-block'
+        fontSize: '4rem',
+        marginBottom: '0.8rem',
+        display: 'inline-block',
+        color: 'var(--text-main)'
     },
     title: {
-        fontSize: '2.5rem',
-        color: 'var(--color-primary)',
-        marginBottom: '0.5rem',
-        textShadow: '2px 2px 0px rgba(255,143,163,0.2)'
+        fontSize: '2.2rem',
+        color: 'var(--text-main)',
+        marginBottom: '0.3rem',
+        fontWeight: '900',
+        letterSpacing: '-1px'
     },
     subtitle: {
         color: 'var(--text-muted)',
-        fontSize: '1.1rem',
-        fontWeight: '600'
+        fontSize: '1rem',
+        fontWeight: '600',
+        letterSpacing: '-0.5px'
     },
     menuContainer: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '1.5rem'
+        gap: '1.2rem'
     },
     menuButton: {
         display: 'flex',
         alignItems: 'center',
-        padding: '1.2rem',
-        borderRadius: 'var(--radius-md)',
-        color: 'white',
-        boxShadow: 'var(--shadow-md)',
-        gap: '1rem'
+        padding: '1.2rem 1.5rem',
+        gap: '1.2rem',
+        position: 'relative'
     },
     iconWrapper: {
-        backgroundColor: 'white',
-        borderRadius: 'var(--radius-sm)',
-        padding: '0.8rem',
+        fontSize: '1.8rem',
+        fontWeight: '900',
+        width: '40px',
+        height: '40px',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderRadius: '50%',
+        backgroundColor: 'var(--bg-paper-alt)'
     },
     buttonText: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
+        flex: 1
     },
     buttonTitle: {
-        fontSize: '1.4rem',
+        fontSize: '1.3rem',
         fontWeight: '800',
-        marginBottom: '0.2rem'
+        marginBottom: '0.1rem',
+        color: 'var(--text-main)'
     },
     buttonDesc: {
         fontSize: '0.9rem',
-        opacity: 0.9,
+        color: 'var(--text-muted)',
         fontWeight: '600'
     }
 };

@@ -1,126 +1,191 @@
 @import url('https://fonts.googleapis.com/css2?family=Jua&family=Nunito:wght@400;600;700;800;900&display=swap');
 
 :root {
-  /* Pastel Palette */
-  --bg-primary: #fff5f8;
-  /* Very soft pink/white for background */
-  --bg-secondary: #e6f7ff;
-  /* Soft baby blue */
-  --bg-tertiary: #f0fdf4;
-  /* Soft mint green */
-  --bg-warning: #fffbeb;
-  /* Soft yellow */
+  /* Paper & Point Soft Minimal Palette */
+  --bg-paper: #F9F9F7;
+  --bg-paper-alt: #F0F0EC;
+  --bg-paper-dark: #E2E2DE;
 
-  --color-primary: #ff8fa3;
-  /* Fun pink */
-  --color-secondary: #4facfe;
-  /* Cheerful blue */
-  --color-success: #38bdf8;
-  /* Bright sky blue */
-  --color-accent: #fcd34d;
-  /* Warm yellow */
+  --color-point-orange: #FF6B35;
+  --color-point-blue: #2A62FF;
 
-  --text-main: #4a4a4a;
-  /* Soft dark grey for readability */
-  --text-muted: #8a8a8a;
-  --text-light: #ffffff;
+  --color-semantic-mint: #48C5A8;
+  --color-semantic-coral: #FF8A8A;
+
+  --text-main: #2D2D2A;
+  --text-muted: #8E8D8A;
+  --line-color: #D1D1CD;
 
   --font-main: 'Nunito', sans-serif;
   --font-number: 'Jua', sans-serif;
 
-  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 8px 15px rgba(255, 143, 163, 0.2);
-  --shadow-lg: 0 15px 25px rgba(0, 0, 0, 0.1);
-  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  /* Soft Minimal Shadows & Neumorphism */
+  --shadow-soft: 0 4px 12px rgba(45, 45, 42, 0.04);
+  --shadow-neumorph-out: 4px 4px 10px rgba(209, 209, 205, 0.4), -4px -4px 10px rgba(255, 255, 255, 0.8);
+  --shadow-neumorph-in: inset 3px 3px 6px rgba(209, 209, 205, 0.4), inset -3px -3px 6px rgba(255, 255, 255, 0.8);
 
-  --radius-sm: 12px;
-  --radius-md: 20px;
-  --radius-lg: 32px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
   --radius-full: 9999px;
 
-  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Hard Border for specific pop items if needed */
+  --border-thin: 1.5px solid var(--line-color);
+  --border-thick: 3px solid var(--text-main);
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  user-select: none;
-  /* Prevent text selection for app-like feel */
   -webkit-user-select: none;
+  user-select: none;
 }
 
 body {
   font-family: var(--font-main);
-  background-color: var(--bg-primary);
+  background-color: #EDEDE8;
+  /* Darker backplate behind the 600px app */
   color: var(--text-main);
   line-height: 1.5;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Fun background pattern */
-  background-image: radial-gradient(var(--color-primary) 1px, transparent 1px);
-  background-size: 40px 40px;
-  background-position: 0 0;
-  background-color: #fff9fa;
-  overflow: hidden;
-  /* App like feel, prevent scrolling unless intended */
 }
 
-/* Number font utility */
 .font-number {
   font-family: var(--font-number);
 }
 
-/* Base button styles */
+/* Base button reset for Neumorphism touches */
 button {
-  font-family: var(--font-main);
-  font-weight: 700;
-  cursor: pointer;
+  font-family: inherit;
   border: none;
-  background: none;
+  cursor: pointer;
   outline: none;
-  transition: transform var(--transition-fast);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-tap-highlight-color: transparent;
 }
 
-button:active {
-  transform: scale(0.95);
-}
-
-/* Reusable structural classes */
+/* Global App Container */
 .app-container {
   width: 100%;
-  max-width: 480px;
-  /* Mobile size */
+  min-width: 600px;
+  max-width: 600px;
   height: 100vh;
   max-height: 850px;
-  background: white;
+  background-color: var(--bg-paper);
   position: relative;
   display: flex;
   flex-direction: column;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
   overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-@media (min-width: 481px) {
-  .app-container {
-    height: 90vh;
-    border-radius: var(--radius-lg);
+/* Sticky GNB */
+.sticky-gnb {
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  background-color: rgba(249, 249, 247, 0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: var(--border-thin);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 50;
+}
+
+.sticky-gnb .title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-main);
+}
+
+/* Progress Bar (Thin 1px Line) */
+.progress-bar-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--bg-paper-dark);
+  z-index: 51;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--color-point-blue);
+  transition: width 0.4s ease-out;
+}
+
+/* Neumorphism specific utilities */
+.btn-neumorph {
+  background: var(--bg-paper);
+  box-shadow: var(--shadow-neumorph-out);
+  border: var(--border-thin);
+  color: var(--text-main);
+  border-radius: var(--radius-full);
+}
+
+.btn-neumorph:active {
+  box-shadow: var(--shadow-neumorph-in);
+  border-color: transparent;
+}
+
+.slot-neumorph {
+  background: var(--bg-paper);
+  box-shadow: var(--shadow-neumorph-in);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--line-color);
+}
+
+/* Animations - Soft Minimal */
+@keyframes bounce-subtle {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
   }
 }
 
-/* Micro-animations */
-@keyframes pop-in {
+.animate-bounce-subtle {
+  animation: bounce-subtle 1.5s ease-in-out infinite;
+}
+
+@keyframes blink-subtle {
+
+  0%,
+  96%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  98% {
+    transform: scaleY(0.1);
+  }
+}
+
+.animate-blink {
+  animation: blink-subtle 4s infinite;
+  transform-origin: center;
+}
+
+@keyframes pop-subtle {
   0% {
-    transform: scale(0);
+    transform: scale(0.95);
     opacity: 0;
-  }
-
-  80% {
-    transform: scale(1.1);
-    opacity: 1;
   }
 
   100% {
@@ -129,67 +194,28 @@ button:active {
   }
 }
 
-@keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
-
-  100% {
-    transform: translateY(0px);
-  }
+.animate-pop-subtle {
+  animation: pop-subtle 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-@keyframes shake {
-
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-
-  25% {
-    transform: translateX(-5px) rotate(-5deg);
-  }
-
-  50% {
-    transform: translateX(5px) rotate(5deg);
-  }
-
-  75% {
-    transform: translateX(-5px) rotate(-5deg);
-  }
-}
-
-.animate-pop {
-  animation: pop-in var(--transition-bounce) forwards;
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-shake {
-  animation: shake 0.4s ease-in-out;
+/* Confetti Container */
+.confetti-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+  overflow: hidden;
 }
 
 .copyright-footer {
   position: fixed;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
-  padding: 0.8rem;
+  bottom: 0.5rem;
   font-size: 0.8rem;
-  font-weight: 600;
   color: var(--text-muted);
-  background-color: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(5px);
-  z-index: 1000;
-}
-
-/* Hide scrollbar for horizontal scrolling elements */
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
+  text-align: center;
+  width: 100%;
+  pointer-events: none;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function ComboSystem({ combo }) {
-    if (combo < 2) return <div style={styles.placeholder} />;
+    if (combo < 2) return null;
 
     // Dynamic style based on combo
     let color = 'var(--color-secondary)';
@@ -20,25 +20,37 @@ export default function ComboSystem({ combo }) {
     }
 
     return (
-        <div key={combo} style={{ ...styles.container, color, transform: `scale(${scale})` }} className="animate-pop">
-            {text}
+        <div style={styles.absoluteWrapper}>
+            <div key={combo} style={{ ...styles.container, color, transform: `scale(${scale})` }} className="animate-pop">
+                {text}
+            </div>
         </div>
     );
 }
 
 const styles = {
-    placeholder: {
-        height: '40px',
-        width: '100%'
+    absoluteWrapper: {
+        position: 'absolute',
+        top: '20%',
+        left: 0,
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        zIndex: 50,
+        pointerEvents: 'none'
     },
     container: {
-        height: '40px',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         fontSize: '1.5rem',
-        fontWeight: '800',
-        textShadow: '1px 1px 0px rgba(0,0,0,0.1)',
-        transition: 'all 0.3s ease'
+        fontWeight: '900',
+        textShadow: '2px 2px 0px white',
+        transition: 'all 0.3s ease',
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        padding: '0.4rem 1.2rem',
+        borderRadius: 'var(--radius-full)',
+        border: '4px solid rgba(0,0,0,0.1)',
+        boxShadow: 'var(--shadow-md)',
     }
 };

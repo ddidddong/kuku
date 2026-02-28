@@ -1,34 +1,77 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Home from './components/Home';
-import MissingNumberMode from './components/MissingNumberMode';
-import SpeedRunMode from './components/SpeedRunMode';
-import Collection from './components/Collection';
+import AdditionMode from './components/AdditionMode';
+import MultiplicationMode from './components/MultiplicationMode';
+import BingoMode from './components/BingoMode';
+import CanvasMode from './components/CanvasMode';
 
 function App() {
-  // 'home', 'missing_number', 'speed_run', 'collection'
+  // 'home', 'addition', 'multiplication', 'bingo', 'canvas'
   const [currentMode, setCurrentMode] = useState('home');
+  const [progress, setProgress] = useState(0);
+
+  // Mock progress simulation for demonstration
+  useEffect(() => {
+    if (currentMode !== 'home') {
+      setProgress(50); // specific modes show 50%
+    } else {
+      setProgress(0);
+    }
+  }, [currentMode]);
 
   const renderView = () => {
     switch (currentMode) {
-      case 'missing_number':
-        return <MissingNumberMode onBack={() => setCurrentMode('home')} />;
-      case 'speed_run':
-        return <SpeedRunMode onBack={() => setCurrentMode('home')} />;
-      case 'collection':
-        return <Collection onBack={() => setCurrentMode('home')} />;
+      case 'addition':
+        return <AdditionMode onBack={() => setCurrentMode('home')} />;
+      case 'multiplication':
+        return <MultiplicationMode onBack={() => setCurrentMode('home')} />;
+      case 'bingo':
+        return <BingoMode onBack={() => setCurrentMode('home')} />;
+      case 'canvas':
+        return <CanvasMode onBack={() => setCurrentMode('home')} />;
       case 'home':
       default:
         return <Home onSelectMode={setCurrentMode} />;
     }
   };
 
+  const getPageTitle = () => {
+    switch (currentMode) {
+      case 'addition': return '덧셈 팡팡';
+      case 'multiplication': return '구구단 톡톡';
+      case 'bingo': return '빙고 챌린지';
+      case 'canvas': return '나의 캔버스';
+      case 'home':
+      default: return '구구단 빌리지';
+    }
+  };
+
   return (
     <>
       <div className="app-container">
-        {renderView()}
-      </div>
-      <div className="copyright-footer">
-        &copy; 2026 YES Gugudan. All rights reserved.
+        {/* Progress Bar (Thin 1px Line) */}
+        <div className="progress-bar-container">
+          <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
+        </div>
+
+        {/* Sticky GNB */}
+        <div className="sticky-gnb">
+          <div className="title font-number">{getPageTitle()}</div>
+          {currentMode !== 'home' && (
+            <button
+              className="btn-neumorph"
+              style={{ width: '36px', height: '36px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '1.2rem', paddingBottom: '2px' }}
+              onClick={() => setCurrentMode('home')}
+            >
+              ×
+            </button>
+          )}
+        </div>
+
+        {/* Main Content Area */}
+        <div style={{ flex: 1, paddingTop: '60px', display: 'flex', flexDirection: 'column', backgroundColor: 'transparent' }}>
+          {renderView()}
+        </div>
       </div>
     </>
   );
